@@ -1,0 +1,34 @@
+services:
+  backend:
+    build: ./backend
+    ports:
+      - '5000:5000'
+    environment:
+      - MONGO_URI=${mongodb+srv://dbUser:Denzel2024@cluster1.vwj7x.mongodb.net/}  # Reference the MongoDB URI from .env
+      - JWT_SECRET=${UmZHRo91Qsrtin0IYaolbMP2fs5MYu}  # Reference the JWT Secret from .env
+    volumes:
+      - ./backend:/app
+    depends_on:
+      - mongo
+    command: npm run dev  # Starts the backend server
+
+  frontend:
+    build: ./frontend
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./frontend:/app
+    stdin_open: true
+    tty: true
+    command: npm start  # Starts the React app
+
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    ports:
+      - '27017:27017'
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=example
+    volumes:
+      - ./data:/data/db
